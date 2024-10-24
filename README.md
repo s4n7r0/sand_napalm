@@ -29,7 +29,7 @@ and instead works by shifting copies of input.
 [JUCE](https://www.juce.com)
 
 # Support
-[Soundcloud](https://www.soundcloud.com/s4n7r0)
-[Twitter](https://www.twitter.com/s4n7r0)
-[Bluesky](https://www.bluesky.com/sandr0.bsky.social)
-[Bandcamp](https://www.bandcamp.com/s4n7r0)
+[Soundcloud](https://www.soundcloud.com/s4n7r0) <br>
+[Twitter](https://www.twitter.com/s4n7r0) <br>
+[Bluesky](https://bsky.app/profile/sandr0.bsky.social) <br>
+[Bandcamp](https://www.s4n7r0.bandcamp.com/track/dragonfly) <br>
