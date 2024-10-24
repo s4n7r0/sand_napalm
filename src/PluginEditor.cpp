@@ -37,15 +37,25 @@ NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
     LAF().setColour(SliderIds::textBoxOutlineColourId, napalm::colours::invisible);
     LAF().setColour(TextButtonIds::buttonColourId, napalm::colours::component_background);
 
-    tooltip_text = std::string(
-        "Invert Phase: Inverts phase of every even copy\nMIDI: Uses midi input instead of given range\n,\nplease contact me on discord: .sandr0\n\Ver: ") + NAPALM_VER;
+    invert_text = juce::String("invert phase: Inverts phase of every even copy");
+    midi_text = juce::String("MIDI:           Uses midi input instead of given range");
+    amount_text = juce::String("amount:       Shift copies by an amount");
+    range_text = juce::String("range:          Max range to which copies can be shifted to");
+    copies_text = juce::String("copies:         How many copies to create");
+    contact_text = juce::String("If you have any issues, please contact me on discord: .sandr0");
+    version_text = juce::String(std::string("Ver:") + NAPALM_VER);
+
+    help_texts.push_back(invert_text);
+    help_texts.push_back(midi_text);
+    help_texts.push_back(amount_text);
+    help_texts.push_back(range_text);
+    help_texts.push_back(copies_text);
+    help_texts.push_back(contact_text);
+    help_texts.push_back(version_text);
 
     help.setButtonText("?");
     help.setBounds(getWidth() - 35, 10, 25, 25);
     help.setColour(1, napalm::colours::component_background);
-    help_text.setText(tooltip_text);
-    help_text.setJustification(juce::Justification::horizontallyCentred);
-    help_text.setBounds(50, 50, 200, 200);
 
     invert.button.setButtonText("invert phase");
     invert.button.setBounds(37, 10, 100, 25);
@@ -93,9 +103,6 @@ NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
     addAndMakeVisible(midi.button           , 0);
     addAndMakeVisible(invert.button         , 0);
     addAndMakeVisible(help                  , 0);
-    addAndMakeVisible(amount_text           , 0);
-    addAndMakeVisible(multiplier_text       , 0);
-    addAndMakeVisible(copies_text           , 0);
 
 }
 
@@ -110,7 +117,7 @@ void NapalmAudioProcessorEditor::paint (juce::Graphics& g)
     g.fillAll (napalm::colours::background);
 
     g.setColour (napalm::colours::text);
-    g.setFont(15);
+    set_font_size(g, 15);
     g.drawFittedText(juce::String("amount"), amount_text_bounds, juce::Justification::right, 4, 0);
     g.drawFittedText(juce::String("range"), multiplier_text_bounds, juce::Justification::right, 4, 0);
     g.drawFittedText(juce::String("copies"), copies_text_bounds, juce::Justification::right, 4, 0);
@@ -120,8 +127,17 @@ void NapalmAudioProcessorEditor::paint (juce::Graphics& g)
         if (!help_state) help_state = true;
 
         g.fillAll (napalm::colours::background);
+        set_font_size(g, 20);
         g.drawSingleLineText("NAPALM", getWidth() / 2, 25, juce::Justification::centred);
-        g.drawFittedText(tooltip_text, juce::Rectangle<int>(25, 50, getWidth(), getHeight() / 1.5), juce::Justification::left, 10, 0);
+        set_font_size(g, 12);
+        int text_y = 30;
+
+        for (int i = 0; i < help_texts.size()-2; ++i) {
+            g.drawFittedText(help_texts[i], juce::Rectangle<int>(25, text_y + ((text_y / 1.5) * i), getWidth(), 25), juce::Justification::left, 1, 1);
+        }
+
+        g.drawFittedText(contact_text,  juce::Rectangle<int>(25, getHeight()/1.4f, getWidth(), 25), juce::Justification::left, 1, 1);
+        g.drawFittedText(version_text,  juce::Rectangle<int>(0, getHeight() - text_y, getWidth(), 25), juce::Justification::centred, 1, 1);
 
     } else if (help_state) {
         help_state = false;
@@ -137,9 +153,12 @@ void NapalmAudioProcessorEditor::resized()
 }
 
 inline void NapalmAudioProcessorEditor::show_or_hide() {
-    if (help_state) {
-        for (auto component : components) {
-            findChildWithID(component)->setVisible(!help_state);
-        }
+    for (auto component : components) {
+        findChildWithID(component)->setVisible(!help_state);
     }
+}
+
+inline void NapalmAudioProcessorEditor::set_font_size(juce::Graphics& g, float new_size) {
+    text_size = new_size;
+    g.setFont(text_size);
 }

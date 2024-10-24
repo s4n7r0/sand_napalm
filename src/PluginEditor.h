@@ -51,28 +51,32 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     inline void show_or_hide();
+    inline void set_font_size(juce::Graphics&, float);
 
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     NapalmAudioProcessor& audioProcessor;
 
-    std::string tooltip_text;
+    float text_size;
+    juce::String invert_text;
+    juce::String midi_text;
+    juce::String amount_text;
+    juce::String range_text;
+    juce::String copies_text;
+    juce::String contact_text;
+    juce::String version_text;
 
     std::vector<juce::String> components;
+    std::vector<juce::String> help_texts;
 
     AttachedToggleButton invert;
     AttachedToggleButton midi;
     juce::TextButton help;
-    juce::DrawableText help_text;
-    juce::DrawableRectangle help_body;
+    //juce::DrawableRectangle help_body;
     AttachedSlider delay_time;
     AttachedSlider time_multiplier;
     AttachedSlider copies;
-
-    juce::DrawableText amount_text;
-    juce::DrawableText multiplier_text;
-    juce::DrawableText copies_text;
 
     juce::Rectangle<int> amount_text_bounds;
     juce::Rectangle<int> multiplier_text_bounds;
