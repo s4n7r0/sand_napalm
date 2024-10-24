@@ -1,9 +1,11 @@
 #pragma once
 #include "NapalmParams.h"
 
-#define NAPALM_VER "0.6.0"
+#define NAPALM_VER "0.7.0"
 
 namespace napalm {
+
+	const float smooth_target = 0.05;
 
 	class Processor {
 	public:
@@ -14,13 +16,16 @@ namespace napalm {
 		void process(juce::AudioBuffer<float>& buffer, const napalm::APVTS&);
 		inline void set_delay(float);
 		inline void set_copies(int);
-		void set_multiplier(float);
+		inline void set_multiplier(float);
 
 		void midi_switch(bool);
 		void midi_set_length(double);
 
 		juce::LinearSmoothedValue<float> smooth_time;
 		juce::LinearSmoothedValue<float> smooth_multiplier;
+		juce::LinearSmoothedValue<float> smooth_copies;
+		inline void smooth_reset(float);
+
 		bool midi_input{ false };
 		float sample_rate;
 

@@ -8,33 +8,41 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "NapalmEditor.h"
 
 //==============================================================================
 NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p), help_state{false},
-      delay_time(p, "amount"),
-      time_multiplier(p, "multiplier"),
-      copies(p, "copies"),
-      invert(p, "invert"),
-      midi(p, "midi")
+      delay_time(p, "amount", components),
+      time_multiplier(p, "multiplier", components),
+      copies(p, "copies", components),
+      invert(p, "invert", components),
+      midi(p, "midi", components)
 {
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
+
+    using SliderIds = juce::Slider::ColourIds;
+    using TextButtonIds = juce::TextButton::ColourIds;
+
+    // function alias
+    auto temp_laf = std::mem_fn(&NapalmAudioProcessorEditor::getLookAndFeel);
+    auto LAF = std::bind(temp_laf, this); 
+
     setSize (400, 200);
     setResizable(false, false);
     setRepaintsOnMouseActivity(true);
-    getLookAndFeel().setColour(juce::Slider::ColourIds::backgroundColourId, juce::Colour(juce::uint32(0xff303030)));
-    getLookAndFeel().setColour(juce::Slider::ColourIds::trackColourId, juce::Colour(juce::uint32(0xffbfbfbf)));
-    getLookAndFeel().setColour(juce::Slider::ColourIds::thumbColourId, juce::Colour(juce::uint32(0xffd0d0d0)));
-    getLookAndFeel().setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colour(juce::uint32(0x00000000)));
-    getLookAndFeel().setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colour(juce::uint32(0xff303030)));
+
+    LAF().setColour(SliderIds::backgroundColourId, napalm::colours::component_background);
+    LAF().setColour(SliderIds::trackColourId, napalm::colours::slider_track);
+    LAF().setColour(SliderIds::thumbColourId, napalm::colours::thumb);
+    LAF().setColour(SliderIds::textBoxOutlineColourId, napalm::colours::invisible);
+    LAF().setColour(TextButtonIds::buttonColourId, napalm::colours::component_background);
 
     tooltip_text = std::string(
-        "Hello!\n\nThis is\nNot A Phaser ALthough Maybe\naka \"NAPALM\"\n\n\If you have any issues,\nplease contact me on discord: .sandr0\n\Ver: ") + NAPALM_VER;
+        "Invert Phase: Inverts phase of every even copy\nMIDI: Uses midi input instead of given range\n,\nplease contact me on discord: .sandr0\n\Ver: ") + NAPALM_VER;
 
     help.setButtonText("?");
     help.setBounds(getWidth() - 35, 10, 25, 25);
-    help.setColour(29, juce::Colour(juce::uint32(0xff181818)));
+    help.setColour(1, napalm::colours::component_background);
     help_text.setText(tooltip_text);
     help_text.setJustification(juce::Justification::horizontallyCentred);
     help_text.setBounds(50, 50, 200, 200);
@@ -68,6 +76,17 @@ NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
     copies.slider.setRange(juce::Range<double>(1, 32), 1);
     copies.slider.setTextBoxStyle(copies.slider.getTextBoxPosition(), 0, 50, 25);
 
+    amount_text_bounds = delay_time.slider.getBounds();
+    multiplier_text_bounds = time_multiplier.slider.getBounds();
+    copies_text_bounds = copies.slider.getBounds();
+
+    amount_text_bounds.setY(amount_text_bounds.getY() - 20);
+    amount_text_bounds.setX(amount_text_bounds.getX() - 20);
+    multiplier_text_bounds.setY(multiplier_text_bounds.getY() - 20);
+    multiplier_text_bounds.setX(multiplier_text_bounds.getX() - 20);
+    copies_text_bounds.setY(copies_text_bounds.getY() - 20);
+    copies_text_bounds.setX(copies_text_bounds.getX() - 20);
+
     addAndMakeVisible(delay_time.slider     , 0);
     addAndMakeVisible(time_multiplier.slider, 0);
     addAndMakeVisible(copies.slider         , 0);
@@ -88,19 +107,22 @@ NapalmAudioProcessorEditor::~NapalmAudioProcessorEditor()
 void NapalmAudioProcessorEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (juce::Colour(juce::uint32(0xff181818)));
+    g.fillAll (napalm::colours::background);
 
-    g.setColour (juce::Colours::whitesmoke);
+    g.setColour (napalm::colours::text);
     g.setFont(15);
-    
+    g.drawFittedText(juce::String("amount"), amount_text_bounds, juce::Justification::right, 4, 0);
+    g.drawFittedText(juce::String("range"), multiplier_text_bounds, juce::Justification::right, 4, 0);
+    g.drawFittedText(juce::String("copies"), copies_text_bounds, juce::Justification::right, 4, 0);
+
     if (help.isMouseOver()) {
 
-        if (!help_state) {
-            help_state = true;
-        }
+        if (!help_state) help_state = true;
 
-        g.fillAll (juce::Colour(juce::uint32(0xff181818)));
-        g.drawFittedText(tooltip_text, juce::Rectangle<int>(0, 25, getWidth(), getHeight() / 1.5), juce::Justification::centred, 10, 0);
+        g.fillAll (napalm::colours::background);
+        g.drawSingleLineText("NAPALM", getWidth() / 2, 25, juce::Justification::centred);
+        g.drawFittedText(tooltip_text, juce::Rectangle<int>(25, 50, getWidth(), getHeight() / 1.5), juce::Justification::left, 10, 0);
+
     } else if (help_state) {
         help_state = false;
     }
@@ -115,10 +137,9 @@ void NapalmAudioProcessorEditor::resized()
 }
 
 inline void NapalmAudioProcessorEditor::show_or_hide() {
-    //change this to iterate thru a components vector
-    delay_time.slider.setVisible(!help_state);
-    time_multiplier.slider.setVisible(!help_state);
-    copies.slider.setVisible(!help_state);
-    midi.button.setVisible(!help_state);
-    invert.button.setVisible(!help_state);
+    if (help_state) {
+        for (auto component : components) {
+            findChildWithID(component)->setVisible(!help_state);
+        }
+    }
 }

@@ -2,7 +2,7 @@
 #include "PluginEditor.h"
 #include "NapalmProcessor.h"
 
-napalm::Processor::Processor() {}
+napalm::Processor::Processor() : sample_rate{ 44100 } {}
 
 void napalm::Processor::fill_buffer(juce::AudioBuffer<float>& input_buffer) {
 
@@ -29,14 +29,15 @@ void napalm::Processor::process(juce::AudioBuffer<float>& input_buffer,const nap
 	set_copies(*apvts.getRawParameterValue("copies"));
 	set_multiplier(*apvts.getRawParameterValue("multiplier"));
 	const int invert_phase = *apvts.getRawParameterValue("invert"); //0 to 1 -> -1 to 1
+	const int num_samples = input_buffer.getNumSamples();
 
-	delay_time = smooth_time.getNextValue();
-	delay_time *= smooth_multiplier.getNextValue();
+	delay_time = smooth_time.skip(num_samples);
+	delay_time *= smooth_multiplier.skip(num_samples);
+	delay_copies = smooth_copies.skip(num_samples);
 
 	if (buffer_pos <= delay_time) return;
 	if (delay_counter >= buffer_pos) delay_counter = 0;
 
-	const int num_samples = input_buffer.getNumSamples();
 	const int prev_samples = buffer_pos - num_samples;
 	const float gain = 1.f / delay_copies;
 	float invert_gain = 1;
@@ -45,10 +46,10 @@ void napalm::Processor::process(juce::AudioBuffer<float>& input_buffer,const nap
 
 		input_buffer.applyGain(channel, 0, num_samples, gain);
 
-		auto* channelData = input_buffer.getWritePointer(channel);
 		auto cur_channel = buffer[channel].getRawDataPointer() + prev_samples;
 
 		for (int i = 1; i < delay_copies; ++i) {
+
 			//creates n copies in between buffer_pos and delay_time
 			if (invert_phase) invert_gain = (((i % 2) - 0.5) * -2);
 
@@ -62,7 +63,7 @@ inline void napalm::Processor::set_delay(float value) {
 	smooth_time.setTargetValue(value);
 }
 
-void napalm::Processor::set_multiplier(float value = 0) {
+inline void napalm::Processor::set_multiplier(float value = 0) {
 	if (midi_input) {
 		smooth_multiplier.setTargetValue(midi_note_length);
 	} else {
@@ -71,22 +72,27 @@ void napalm::Processor::set_multiplier(float value = 0) {
 }
 
 inline void napalm::Processor::set_copies(int value) {
-	delay_copies = value;
+	smooth_copies.setTargetValue(value);
 }
 
 void napalm::Processor::midi_switch(bool value) {
 	midi_input = value;
+
 	if (midi_input) {
-		smooth_multiplier.reset(sample_rate, 0);
-		smooth_time.reset(sample_rate, 0);
+		smooth_reset(0);
 	}
 	else {
-		smooth_multiplier.reset(sample_rate, 0.001);
-		smooth_time.reset(sample_rate, 0.001);
+		smooth_reset(smooth_target);
 	}
 }
 
 void napalm::Processor::midi_set_length(double period) {
 	midi_note_length = period;
 	set_multiplier();
+}
+
+inline void napalm::Processor::smooth_reset(float target) {
+	smooth_multiplier.reset(sample_rate, target);
+	smooth_time.reset(sample_rate, target);
+	smooth_copies.reset(sample_rate, target / 10);
 }

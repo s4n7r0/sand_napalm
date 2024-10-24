@@ -13,9 +13,12 @@
 
 struct AttachedSlider {
 
-    AttachedSlider(NapalmAudioProcessor& p, juce::String paramid)
+    AttachedSlider(NapalmAudioProcessor& p, juce::String paramid, std::vector<juce::String>& comps)
         : slider(), attachment(*p.apvts.getParameter(paramid), slider, &p.undo)
-    {}
+    {
+        slider.setComponentID(paramid);
+        comps.push_back(paramid);
+    }
 
     juce::Slider slider;
     juce::SliderParameterAttachment attachment;
@@ -23,9 +26,12 @@ struct AttachedSlider {
 
 struct AttachedToggleButton {
 
-    AttachedToggleButton(NapalmAudioProcessor& p, juce::String paramid)
+    AttachedToggleButton(NapalmAudioProcessor& p, juce::String paramid, std::vector<juce::String>& comps)
         : button(p.apvts.getParameter(paramid)->getLabel()), attachment(*p.apvts.getParameter(paramid), button, &p.undo)
-    {}
+    {
+        button.setComponentID(paramid);
+        comps.push_back(paramid);
+    }
 
     juce::ToggleButton button;
     juce::ButtonParameterAttachment attachment;
@@ -53,7 +59,7 @@ private:
 
     std::string tooltip_text;
 
-    //make a vector that holds all components
+    std::vector<juce::String> components;
 
     AttachedToggleButton invert;
     AttachedToggleButton midi;
@@ -67,6 +73,10 @@ private:
     juce::DrawableText amount_text;
     juce::DrawableText multiplier_text;
     juce::DrawableText copies_text;
+
+    juce::Rectangle<int> amount_text_bounds;
+    juce::Rectangle<int> multiplier_text_bounds;
+    juce::Rectangle<int> copies_text_bounds;
 
     bool help_state;
 

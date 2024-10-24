@@ -96,8 +96,7 @@ void NapalmAudioProcessor::changeProgramName (int index, const juce::String& new
 void NapalmAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     napalm_processor.sample_rate = sampleRate;
-    napalm_processor.smooth_time.reset(sampleRate, 0.001);
-    napalm_processor.smooth_multiplier.reset(sampleRate, 0.001);
+    napalm_processor.smooth_reset(napalm::smooth_target);
 }
 
 void NapalmAudioProcessor::releaseResources()
@@ -139,8 +138,10 @@ void NapalmAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
+    bool midi = (bool)*apvts.getRawParameterValue("midi");
+
     napalm_processor.fill_buffer(buffer);
-    napalm_processor.midi_switch((bool)*apvts.getRawParameterValue("midi"));
+    if (napalm_processor.midi_input != midi) napalm_processor.midi_switch(midi);
 
     if (napalm_processor.midi_input && midiMessages.data.size() > 0) {
         juce::MidiMessage message(0xf0);
