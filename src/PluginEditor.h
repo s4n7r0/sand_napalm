@@ -103,6 +103,7 @@ private:
     TextButtonBounds help;
     AttachedSlider delay_time;
     AttachedSlider time_multiplier;
+    AttachedSlider pitch;
     AttachedSlider copies;
 
     juce::Rectangle<int> amount_text_bounds;

@@ -15,6 +15,7 @@ NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p), help_state{false},
       delay_time(p, "amount", components),
       time_multiplier(p, "multiplier", components),
+      pitch(p, "pitch", components),
       copies(p, "copies", components),
       invert(p, "invert", components),
       midi(p, "midi", components),
@@ -68,18 +69,24 @@ NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
     delay_time.slider.setNumDecimalPlacesToDisplay(3);
     delay_time.slider.setTextBoxStyle(delay_time.slider.getTextBoxPosition(), 0, 50, 25);
 
-    delay_time.slider.setRange(juce::Range<double>(0, 1), 0.0001);
-    delay_time.slider.setSkewFactor(2.f);
+    delay_time.slider.setRange({ napalm::bool_range.getStart(), napalm::bool_range.getEnd() }, 0.0001);
+    //delay_time.slider.setSkewFactor(2.f);
 
     time_multiplier.set_bounds({ 25, 85, (int)(getWidth() / 1.25), 50 });
     time_multiplier.slider.setNumDecimalPlacesToDisplay(0);
     time_multiplier.slider.setTextBoxStyle(time_multiplier.slider.getTextBoxPosition(), 0, 50, 25);
 
-    time_multiplier.slider.setRange(juce::Range<double>(1, napalm::MAX_SAMPLES_IN_BUFFER), 1);
-    time_multiplier.slider.setSkewFactor(.5f);
+    time_multiplier.slider.setRange({ napalm::multiplier_range.getStart(), napalm::multiplier_range.getEnd() }, 1);
+
+    pitch.set_bounds({ 25, 85, (int)(getWidth() / 1.25), 50 });
+    pitch.slider.setNumDecimalPlacesToDisplay(0);
+    pitch.slider.setTextBoxStyle(time_multiplier.slider.getTextBoxPosition(), 0, 50, 25);
+    
+    pitch.slider.setRange({ napalm::pitch_range.getStart(), napalm::pitch_range.getEnd() }, 1.f);
+    //time_multiplier.slider.setSkewFactor(.5f);
 
     copies.set_bounds({ 25, 135, (int)(getWidth() / 1.25), 50 });
-    copies.slider.setRange(juce::Range<double>(1, 32), 1);
+    copies.slider.setRange({ napalm::copies_range.getStart(), napalm::copies_range.getEnd() }, 1);
     copies.slider.setTextBoxStyle(copies.slider.getTextBoxPosition(), 0, 50, 25);
 
     amount_text_bounds = delay_time.slider.getBounds();
@@ -95,7 +102,8 @@ NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
 
     addAndMakeVisible(delay_time.slider     , 0);
     addAndMakeVisible(time_multiplier.slider, 0);
-    addAndMakeVisible(copies.slider         , 0);
+    addChildComponent(pitch.slider          , 0);
+    addChildComponent(copies.slider         , 0);
     addAndMakeVisible(midi.button           , 0);
     addAndMakeVisible(invert.button         , 0);
     addAndMakeVisible(help.button           , 0);
@@ -116,7 +124,6 @@ void NapalmAudioProcessorEditor::paint (juce::Graphics& g)
     int slider_width = getWidth() - (size_width / 5) * abs_scale;
 
     g.fillAll (napalm::colours::background);
-
     g.setColour (napalm::colours::text);
     set_font_size(g, 15 * abs_scale);
 
@@ -128,7 +135,13 @@ void NapalmAudioProcessorEditor::paint (juce::Graphics& g)
     temp_bounds = multiplier_text_bounds;
     temp_bounds *= abs_scale;
     temp_bounds.setWidth(slider_width);
-    g.drawFittedText(juce::String("range"), temp_bounds, juce::Justification::right, 4, 0);
+
+    if (midi.button.getToggleState()) {
+        g.drawFittedText(juce::String("pitch"), temp_bounds, juce::Justification::right, 4, 0);
+    }
+    else {
+        g.drawFittedText(juce::String("range"), temp_bounds, juce::Justification::right, 4, 0);
+    }
 
     temp_bounds = copies_text_bounds;
     temp_bounds *= abs_scale;
@@ -157,6 +170,18 @@ void NapalmAudioProcessorEditor::paint (juce::Graphics& g)
     }
 
     show_or_hide();
+
+    if (!help_state) {
+        if (midi.button.getToggleState()) {
+            time_multiplier.slider.setVisible(false);
+            pitch.slider.setVisible(true);
+        }
+        else {
+            time_multiplier.slider.setVisible(true);
+            pitch.slider.setVisible(false);
+            //addAndMakeVisible(pitch.slider, 0);
+        }
+    }
 }
 
 void NapalmAudioProcessorEditor::resized()

@@ -1,7 +1,7 @@
 #pragma once
 #include "NapalmParams.h"
 
-#define NAPALM_VER "0.7.0"
+#define NAPALM_VER "0.8.0"
 
 namespace napalm {
 
