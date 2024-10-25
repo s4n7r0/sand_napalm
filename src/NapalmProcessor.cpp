@@ -89,6 +89,7 @@ void napalm::Processor::midi_switch(bool value) {
 void napalm::Processor::midi_set_note(juce::MidiMessage midi) {
 	midi_note = midi.getNoteNumber();
 }
+
 void napalm::Processor::midi_set_length(float note) {
 	//double hz = midi.getMidiNoteInHertz(midi.getNoteNumber());
 	float hz = mtof(note);

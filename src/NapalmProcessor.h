@@ -1,8 +1,6 @@
 #pragma once
 #include "NapalmParams.h"
 
-#define NAPALM_VER "0.8.5"
-
 namespace napalm {
 
 	const float smooth_target = 0.1;

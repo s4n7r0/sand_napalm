@@ -6,6 +6,8 @@
               pluginManufacturer="sandr0" companyWebsite="www.github.com/s4n7r0">
   <MAINGROUP id="n88TLo" name="Napalm">
     <GROUP id="{59655F8D-EF4D-BFB7-4180-83647489CAED}" name="src">
+      <FILE id="SQW2tQ" name="NapalmEditor.cpp" compile="1" resource="0"
+            file="src/NapalmEditor.cpp"/>
       <FILE id="K8wBaM" name="NapalmEditor.h" compile="0" resource="0" file="src/NapalmEditor.h"/>
       <FILE id="J1tm34" name="NapalmParams.h" compile="0" resource="0" file="src/NapalmParams.h"/>
       <FILE id="NThmvW" name="NapalmProcessor.cpp" compile="1" resource="0"

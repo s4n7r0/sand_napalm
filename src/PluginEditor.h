@@ -10,54 +10,7 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
-
-struct ComponentBounds {
-
-    virtual void set_bounds(juce::Rectangle<int> input) { original_bounds = input; };
-    juce::Rectangle<int> get_bounds() { return original_bounds; }
-
-    juce::Rectangle<int> original_bounds;
-};
-
-struct TextButtonBounds : ComponentBounds {
-
-    TextButtonBounds(juce::String text) : button{ juce::TextButton(text) } {}
-
-    void set_bounds(juce::Rectangle<int> input) override { original_bounds = input; button.setBounds(input); };
-
-    juce::TextButton button;
-};
-
-struct AttachedSlider : ComponentBounds {
-
-    AttachedSlider(NapalmAudioProcessor& p, juce::String paramid, std::vector<juce::String>& comps)
-        : slider(), attachment(*p.apvts.getParameter(paramid), slider, &p.undo)
-    {
-        slider.setComponentID(paramid);
-        comps.push_back(paramid);
-    }
-
-    void set_bounds(juce::Rectangle<int> input) override { original_bounds = input; slider.setBounds(input); };
-
-    juce::Slider slider;
-    juce::SliderParameterAttachment attachment;
-};
-
-struct AttachedToggleButton : ComponentBounds {
-
-    AttachedToggleButton(NapalmAudioProcessor& p, juce::String paramid, std::vector<juce::String>& comps)
-        : button(p.apvts.getParameter(paramid)->getLabel()), attachment(*p.apvts.getParameter(paramid), button, &p.undo)
-    {
-        button.setComponentID(paramid);
-        comps.push_back(paramid);
-    }
-
-    void set_bounds(juce::Rectangle<int> input) override { original_bounds = input; button.setBounds(input); };
-
-    juce::ToggleButton button;
-    juce::ButtonParameterAttachment attachment;
-
-};
+#include "NapalmEditor.h"
 
 //==============================================================================
 /**
@@ -71,8 +24,12 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
-    inline void show_or_hide();
-    inline void set_font_size(juce::Graphics&, float);
+    void show_or_hide();
+    void set_font_size(juce::Graphics&, float);
+    void set_scales();
+    void draw_labels(juce::Graphics&);
+    void draw_help(juce::Graphics&);
+    void setup();
 
 private:
     // This reference is provided as a quick way for your editor to
@@ -83,32 +40,28 @@ private:
     const float my_screen_width{ 1920 };
     const float my_screen_height{ 1080 };
 
-    const float size_width{ 400 };
-    const float size_height = 200;
-
     float text_size;
-    juce::String invert_text;
-    juce::String midi_text;
-    juce::String amount_text;
-    juce::String range_text;
-    juce::String copies_text;
-    juce::String contact_text;
-    juce::String version_text;
+    float x_scale;
+    float y_scale;
+    float abs_scale;
+    float slider_width;
 
     std::vector<juce::String> components;
     std::vector<juce::String> help_texts;
 
-    AttachedToggleButton invert;
-    AttachedToggleButton midi;
-    TextButtonBounds help;
-    AttachedSlider delay_time;
-    AttachedSlider time_multiplier;
-    AttachedSlider pitch;
-    AttachedSlider copies;
+    napalm::components::AttachedToggleButton invert;
+    napalm::components::AttachedToggleButton midi;
+    napalm::components::TextButtonBounds help;
+    napalm::components::AttachedSlider delay_time;
+    napalm::components::AttachedSlider time_multiplier;
+    napalm::components::AttachedSlider pitch;
+    napalm::components::AttachedSlider copies;
 
-    juce::Rectangle<int> amount_text_bounds;
-    juce::Rectangle<int> multiplier_text_bounds;
-    juce::Rectangle<int> copies_text_bounds;
+    napalm::NapalmBounds amount_text_bounds;
+    napalm::NapalmBounds multiplier_text_bounds;
+    napalm::NapalmBounds copies_text_bounds;
+
+    napalm::components::URLTimer url_timer;
 
     bool help_state;
 
