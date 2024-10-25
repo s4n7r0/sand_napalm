@@ -3,7 +3,8 @@
 <JUCERPROJECT id="sA4BeH" name="Napalm" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" pluginCharacteristicsValue="pluginWantsMidiIn"
               pluginFormats="buildStandalone,buildVST3" pluginName="sand_napalm"
-              pluginManufacturer="sandr0" companyWebsite="www.github.com/s4n7r0">
+              pluginManufacturer="sandr0" companyWebsite="www.github.com/s4n7r0"
+              version="0.9.5">
   <MAINGROUP id="n88TLo" name="Napalm">
     <GROUP id="{59655F8D-EF4D-BFB7-4180-83647489CAED}" name="src">
       <FILE id="SQW2tQ" name="NapalmEditor.cpp" compile="1" resource="0"
