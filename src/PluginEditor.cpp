@@ -17,7 +17,8 @@ NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
       time_multiplier(p, "multiplier", components),
       copies(p, "copies", components),
       invert(p, "invert", components),
-      midi(p, "midi", components)
+      midi(p, "midi", components),
+      help("?")
 {
 
     using SliderIds = juce::Slider::ColourIds;
@@ -27,8 +28,9 @@ NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
     auto temp_laf = std::mem_fn(&NapalmAudioProcessorEditor::getLookAndFeel);
     auto LAF = std::bind(temp_laf, this); 
 
-    setSize (400, 200);
-    setResizable(false, false);
+    setSize (size_width, size_height);
+    setResizeLimits(size_width, size_height, size_width * 4, size_height * 4); //why would anyone want it this large...
+    setResizable(true, true);
     setRepaintsOnMouseActivity(true);
 
     LAF().setColour(SliderIds::backgroundColourId, napalm::colours::component_background);
@@ -53,36 +55,30 @@ NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
     help_texts.push_back(contact_text);
     help_texts.push_back(version_text);
 
-    help.setButtonText("?");
-    help.setBounds(getWidth() - 35, 10, 25, 25);
-    help.setColour(1, napalm::colours::component_background);
+    help.set_bounds({ getWidth() - 35, 10, 25, 25 });
+    help.button.setColour(1, napalm::colours::component_background);
 
     invert.button.setButtonText("invert phase");
-    invert.button.setBounds(37, 10, 100, 25);
+    invert.set_bounds({ 37, 10, 100, 25 });
 
     midi.button.setButtonText("midi");
-    midi.button.setBounds(137, 10, 100, 25);
+    midi.set_bounds({ 137, 10, 100, 25 });
 
-    delay_time.slider.setBounds(25, 35, getWidth() / 1.25, 50);
-    delay_time.slider.setHelpText("delay in samples");
+    delay_time.set_bounds({ 25, 35, (int)(getWidth() / 1.25), 50 });
     delay_time.slider.setNumDecimalPlacesToDisplay(3);
     delay_time.slider.setTextBoxStyle(delay_time.slider.getTextBoxPosition(), 0, 50, 25);
 
-    delay_time.slider.setSkewFactor(2.f);
     delay_time.slider.setRange(juce::Range<double>(0, 1), 0.0001);
+    delay_time.slider.setSkewFactor(2.f);
 
-    time_multiplier.slider.setBounds(25, 85, getWidth() / 1.25, 50);
-    time_multiplier.slider.setHelpText("multiplier");
+    time_multiplier.set_bounds({ 25, 85, (int)(getWidth() / 1.25), 50 });
     time_multiplier.slider.setNumDecimalPlacesToDisplay(0);
-    time_multiplier.slider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
     time_multiplier.slider.setTextBoxStyle(time_multiplier.slider.getTextBoxPosition(), 0, 50, 25);
 
     time_multiplier.slider.setRange(juce::Range<double>(1, napalm::MAX_SAMPLES_IN_BUFFER), 1);
     time_multiplier.slider.setSkewFactor(.5f);
 
-    copies.slider.setBounds(25, 135, getWidth() / 1.25, 50);
-    copies.slider.setHelpText("copies");
-    copies.slider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
+    copies.set_bounds({ 25, 135, (int)(getWidth() / 1.25), 50 });
     copies.slider.setRange(juce::Range<double>(1, 32), 1);
     copies.slider.setTextBoxStyle(copies.slider.getTextBoxPosition(), 0, 50, 25);
 
@@ -102,7 +98,7 @@ NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
     addAndMakeVisible(copies.slider         , 0);
     addAndMakeVisible(midi.button           , 0);
     addAndMakeVisible(invert.button         , 0);
-    addAndMakeVisible(help                  , 0);
+    addAndMakeVisible(help.button           , 0);
 
 }
 
@@ -114,15 +110,32 @@ NapalmAudioProcessorEditor::~NapalmAudioProcessorEditor()
 void NapalmAudioProcessorEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
+    float x_scale = getWidth() / size_width;
+    float y_scale = getHeight() / size_height;
+    float abs_scale = std::log2f(std::fabs(((size_width - getWidth()) / size_width) * ((size_height - getHeight()) / size_height)) + 2.f);
+    int slider_width = getWidth() - (size_width / 5) * abs_scale;
+
     g.fillAll (napalm::colours::background);
 
     g.setColour (napalm::colours::text);
-    set_font_size(g, 15);
-    g.drawFittedText(juce::String("amount"), amount_text_bounds, juce::Justification::right, 4, 0);
-    g.drawFittedText(juce::String("range"), multiplier_text_bounds, juce::Justification::right, 4, 0);
-    g.drawFittedText(juce::String("copies"), copies_text_bounds, juce::Justification::right, 4, 0);
+    set_font_size(g, 15 * abs_scale);
 
-    if (help.isMouseOver()) {
+    auto temp_bounds = amount_text_bounds;
+    temp_bounds *= abs_scale;
+    temp_bounds.setWidth(slider_width);
+    g.drawFittedText(juce::String("amount"), temp_bounds, juce::Justification::right, 4, 0);
+
+    temp_bounds = multiplier_text_bounds;
+    temp_bounds *= abs_scale;
+    temp_bounds.setWidth(slider_width);
+    g.drawFittedText(juce::String("range"), temp_bounds, juce::Justification::right, 4, 0);
+
+    temp_bounds = copies_text_bounds;
+    temp_bounds *= abs_scale;
+    temp_bounds.setWidth(slider_width);
+    g.drawFittedText(juce::String("copies"), temp_bounds, juce::Justification::right, 4, 0);
+
+    if (help.button.isMouseOver()) {
 
         if (!help_state) help_state = true;
 
@@ -147,9 +160,27 @@ void NapalmAudioProcessorEditor::paint (juce::Graphics& g)
 }
 
 void NapalmAudioProcessorEditor::resized()
-{
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+{   
+    float x_scale = getWidth() / size_width;
+    float y_scale = getHeight() / size_height;
+    float abs_scale = std::log2f(std::fabs(((size_width - getWidth()) / size_width) * ((size_height - getHeight()) / size_height)) + 2.f);
+    int slider_width = getWidth() - (size_width / 5) * abs_scale;
+
+    auto temp_bounds = help.original_bounds * abs_scale;
+    temp_bounds.setX(getWidth() - 35 * abs_scale);
+    help.button.setBounds(temp_bounds);
+
+    temp_bounds = delay_time.original_bounds * abs_scale;
+    temp_bounds.setWidth(slider_width);
+    delay_time.slider.setBounds(temp_bounds);
+
+    temp_bounds = time_multiplier.original_bounds * abs_scale;
+    temp_bounds.setWidth(slider_width);
+    time_multiplier.slider.setBounds(temp_bounds);
+
+    temp_bounds = copies.original_bounds * abs_scale;
+    temp_bounds.setWidth(slider_width);
+    copies.slider.setBounds(temp_bounds);
 }
 
 inline void NapalmAudioProcessorEditor::show_or_hide() {
