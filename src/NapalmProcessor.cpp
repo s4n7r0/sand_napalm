@@ -86,8 +86,15 @@ void napalm::Processor::midi_switch(bool value) {
 	}
 }
 
-void napalm::Processor::midi_set_length(double period) {
-	midi_note_length = period;
+void napalm::Processor::midi_set_note(juce::MidiMessage midi) {
+	midi_note = midi.getNoteNumber();
+}
+void napalm::Processor::midi_set_length(float note) {
+	//double hz = midi.getMidiNoteInHertz(midi.getNoteNumber());
+	float hz = mtof(note);
+	float length = (1 / hz) * sample_rate; //convert frequency to length of one cycle in samples
+
+	midi_note_length = length;
 	set_multiplier();
 }
 

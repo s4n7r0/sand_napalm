@@ -82,7 +82,8 @@ NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
     pitch.slider.setNumDecimalPlacesToDisplay(0);
     pitch.slider.setTextBoxStyle(time_multiplier.slider.getTextBoxPosition(), 0, 50, 25);
     
-    pitch.slider.setRange({ napalm::pitch_range.getStart(), napalm::pitch_range.getEnd() }, 1.f);
+    pitch.slider.setRange({ napalm::pitch_range.getStart(), napalm::pitch_range.getEnd() }, 0.01f);
+    pitch.slider.onDragEnd = [&]() {pitch.slider.setValue(0); };
     //time_multiplier.slider.setSkewFactor(.5f);
 
     copies.set_bounds({ 25, 135, (int)(getWidth() / 1.25), 50 });

@@ -43,14 +43,14 @@ namespace napalm
 		);
 
 		params.push_back(std::make_unique<APVTS::Parameter>(paramID{ "multiplier", multiplier }, "Multiplier", 
-			NRange{multiplier_range.getStart(), multiplier_range.getEnd(), 0.1, 0.5}, 0,
+			NRange{multiplier_range.getStart(), multiplier_range.getEnd(), 0.1f, 0.5f}, 0,
 			Attributes()
 				.withStringFromValueFunction(string_from_val)
 				.withValueFromStringFunction(val_from_string)
 			)
 		);
 
-		params.push_back(std::make_unique<APVTS::Parameter>(paramID{ "pitch", pitch }, "Pitch", NRange{pitch_range, 1}, 0,
+		params.push_back(std::make_unique<APVTS::Parameter>(paramID{ "pitch", pitch }, "Pitch", NRange{pitch_range, 0.01f}, 0,
 			Attributes()
 				.withStringFromValueFunction(string_from_val)
 				.withValueFromStringFunction(val_from_string)

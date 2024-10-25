@@ -143,16 +143,17 @@ void NapalmAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
     napalm_processor.fill_buffer(buffer);
     if (napalm_processor.midi_input != midi) napalm_processor.midi_switch(midi);
 
-    if (napalm_processor.midi_input && midiMessages.data.size() > 0) {
-        juce::MidiMessage message(0xf0);
-        juce::MidiBuffer::Iterator i(midiMessages);
-        int frame = 0;
+    if (napalm_processor.midi_input) {
 
-        while (i.getNextEvent(message, frame)) {
-            if (message.isNoteOnOrOff()) {
-                double hz = message.getMidiNoteInHertz(message.getNoteNumber());
-                double length = (1 / hz) * getSampleRate(); //convert frequency to length of one cycle in samples
-                napalm_processor.midi_set_length(length);
+        napalm_processor.midi_set_length(napalm_processor.midi_note + *apvts.getRawParameterValue("pitch"));
+
+        if (midiMessages.data.size() > 0) {
+            juce::MidiMessage message(0xf0);
+            juce::MidiBuffer::Iterator i(midiMessages);
+            int frame = 0;
+
+            while (i.getNextEvent(message, frame)) {
+                napalm_processor.midi_set_note(message);
             }
         }
     }
