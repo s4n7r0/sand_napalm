@@ -1,22 +1,22 @@
 # sand_napalm
 
-**N**ot **A** **P**haser **AL**though **M**aybe
+**N**ot **A** **P**haser **AL**though **M**aybe  (**NAPALM**)  VST3 Plugin
 
-aka **NAPALM**
-
-![preview](https://i.imgur.com/wHq8iV9.png)
+![preview](https://i.imgur.com/KDBIDgO.png)
 
 # What does it do?
 
-Creates N equally spaces copies of input, up to the specified range, 
+Creates n equally spaced copies of input, up to the specified range, <br>
 which then can be shifted by an amount up to the range.
 
-So it basically works like a phaser, but it doesn't use an all-pass phaser, 
-and instead works by shifting copies of input.
+So it basically works like a phaser, but it doesn't use an all-pass phaser, <br> 
+and instead works by shifting copies of an input (kinda like a combs filter).
+
+In short: Square4 but as an audio effect
 
 # Parameters
 
-| Syntax       | Description |
+| Parameter    | Description |
 | ------------ | ------------ |
 | Invert Phase | Inverts phase of every even copy |
 | MIDI         | Uses midi input instead of given range <br> Works by converting one cycle of a note frequency to it's size in samples, which is then used as range <br> Useful for consistency between pitches |
@@ -67,6 +67,7 @@ Optionally, on Linux, use Ninja to speed up the build by replacing the first com
 big thanks to [dottokuya](https://github.com/dottokuya) for the build instructions 
 
 # Support
+If you like it, consider donating thru [gumroad!](https://s4n7r0.gumroad.com/l/napalm) <br>
 [Soundcloud](https://www.soundcloud.com/s4n7r0) <br>
 [Twitter](https://www.twitter.com/s4n7r0) <br>
 [Bluesky](https://bsky.app/profile/sandr0.bsky.social) <br>
