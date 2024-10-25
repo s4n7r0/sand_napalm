@@ -4,7 +4,7 @@
 
 namespace napalm {
 
-	const juce::String NAPALM_VER = "0.9.0";
+	const juce::String NAPALM_VER = "0.9.5";
 
 	using IRec = juce::Rectangle<int>;
 
@@ -43,7 +43,7 @@ namespace napalm {
 
 		struct TextButtonBounds : ComponentBounds {
 
-			TextButtonBounds(juce::String text) : button{ juce::TextButton(text) } {}
+			TextButtonBounds(juce::String text) : button{ juce::TextButton(text) } { }
 
 			void set_bounds(juce::Rectangle<int> input) override { original_bounds = input; button.setBounds(input); };
 
@@ -56,6 +56,7 @@ namespace napalm {
 				: slider(), attachment(*p.apvts.getParameter(paramid), slider, &p.undo)
 			{
 				slider.setComponentID(paramid);
+				slider.setColour(juce::ToggleButton::ColourIds::textColourId, colours::text);
 				comps.push_back(paramid);
 			}
 
@@ -71,6 +72,7 @@ namespace napalm {
 				: button(p.apvts.getParameter(paramid)->getLabel()), attachment(*p.apvts.getParameter(paramid), button, &p.undo)
 			{
 				button.setComponentID(paramid);
+				button.setColour(juce::ToggleButton::ColourIds::textColourId, colours::text);
 				comps.push_back(paramid);
 			}
 
@@ -82,16 +84,16 @@ namespace napalm {
 		};
 
 		class URLTimer : public juce::Timer {
-		public:
+			public:
 
-			URLTimer(juce::Component& x) : component{ x } {}
+				URLTimer(juce::Component& x) : component{ x } {}
 
-			void timerCallback() override {
-				component.setVisible(true);
-			}
+				void timerCallback() override {
+					component.setVisible(true);
+				}
 
-		private:
-			juce::Component& component;
+			private:
+				juce::Component& component;
 		};
 
 		const IRec help_bounds({ (int)size_width - 35, 10, 25, 25 });
@@ -99,7 +101,8 @@ namespace napalm {
 		const IRec midi_bounds({ 137, 10, 100, 25 });
 		const IRec amount_bounds({ 25, 35, (int)(size_width / 1.25), 50 });
 		const IRec range_bounds({ 25, 85, (int)(size_width / 1.25), 50 });
-		const IRec pitch_bounds({ 25, 85, (int)(size_width / 1.25), 50 });
+		const IRec pitch_bounds({ 25, 85, (int)(size_width / 1.25), 50});
+		const IRec pitchmax_bounds({(int)(size_width / 1.175), 85, 50, 50 });
 		const IRec copies_bounds({ 25, 135, (int)(size_width / 1.25), 50 });
 
 	}

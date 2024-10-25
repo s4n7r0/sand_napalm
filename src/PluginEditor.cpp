@@ -17,6 +17,7 @@ NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
       delay_time(p, "amount", components),
       time_multiplier(p, "multiplier", components),
       pitch(p, "pitch", components),
+      pitchmax(p, "pitchmax", components),
       copies(p, "copies", components),
       invert(p, "invert", components),
       midi(p, "midi", components),
@@ -55,10 +56,20 @@ NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
     time_multiplier.slider.setRange({ multiplier_range.getStart(), multiplier_range.getEnd() }, 1);
 
     pitch.set_bounds(pitch_bounds);
+    pitch.slider.setRange({ pitch_range.getStart(), pitch_range.getEnd() }, 0.0001f);
     pitch.slider.setNumDecimalPlacesToDisplay(0);
-    pitch.slider.setTextBoxStyle(time_multiplier.slider.getTextBoxPosition(), 0, 50, 25);
-    pitch.slider.setRange({ pitch_range.getStart(), pitch_range.getEnd() }, 0.01f);
+    pitch.slider.setTextBoxStyle(pitch.slider.getTextBoxPosition(), 1, 50, 25);
+    pitch.slider.setTextBoxIsEditable(false);
+    pitch.slider.setColour(juce::Slider::textBoxTextColourId, napalm::colours::invisible);
     pitch.slider.onDragEnd = [&]() {pitch.slider.setValue(0); };
+
+    pitchmax.set_bounds(pitchmax_bounds);
+    pitchmax.slider.setRange({ pitchmax_range.getStart(), pitchmax_range.getEnd() }, 1.f);
+    pitchmax.slider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
+    pitchmax.slider.setSliderSnapsToMousePosition(false);
+    pitchmax.slider.setTextValueSuffix(" st");
+    pitchmax.slider.setColour(juce::Slider::trackColourId, napalm::colours::invisible);
+    pitchmax.slider.setColour(juce::Slider::backgroundColourId, napalm::colours::thumb);
 
     copies.set_bounds(copies_bounds);
     copies.slider.setRange({ copies_range.getStart(), copies_range.getEnd() }, 1);
@@ -71,6 +82,7 @@ NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
     addAndMakeVisible(delay_time.slider     , 0);
     addAndMakeVisible(time_multiplier.slider, 0);
     addChildComponent(pitch.slider          , 0);
+    addChildComponent(pitchmax.slider       , 0);
     addChildComponent(copies.slider         , 0);
     addAndMakeVisible(midi.button           , 0);
     addAndMakeVisible(invert.button         , 0);
@@ -132,6 +144,12 @@ void NapalmAudioProcessorEditor::resized()
 
     pitch.slider.setBounds(temp_bounds);
     pitch.slider.setTransform(juce::AffineTransform::scale(abs_scale, abs_scale));
+
+    temp_bounds = pitchmax.original_bounds;
+    pitchmax.slider.setCentrePosition(0, 0);
+    pitchmax.slider.setBounds(temp_bounds);
+    //i struggled way too much with this...
+    pitchmax.slider.setTransform(juce::AffineTransform::scale(abs_scale, abs_scale).translated(getWidth() - 400 * abs_scale, 0));
 
     temp_bounds = copies.original_bounds;
     temp_bounds.setWidth(abs_slider);

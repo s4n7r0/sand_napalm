@@ -55,6 +55,7 @@ private:
     napalm::components::AttachedSlider delay_time;
     napalm::components::AttachedSlider time_multiplier;
     napalm::components::AttachedSlider pitch;
+    napalm::components::AttachedSlider pitchmax;
     napalm::components::AttachedSlider copies;
 
     napalm::NapalmBounds amount_text_bounds;
