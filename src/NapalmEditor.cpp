@@ -76,7 +76,7 @@ void NapalmAudioProcessorEditor::draw_labels(juce::Graphics& g) {
 	temp_bounds.setWidth(slider_width);
 	g.drawFittedText(juce::String("copies"), temp_bounds, juce::Justification::right, 4, 0);
 
-	//if (getWidth() == size_width) hehe.setVisible(true); else hehe.setVisible(false);
+	if (getWidth() == size_width) hehe.setVisible(true); else hehe.setVisible(false);
 }
 
 void NapalmAudioProcessorEditor::draw_help(juce::Graphics& g) {

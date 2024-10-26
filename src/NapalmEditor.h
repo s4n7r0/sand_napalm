@@ -8,9 +8,6 @@ namespace napalm {
 
 	using IRec = juce::Rectangle<int>;
 
-	const float size_width = 400;
-	const float size_height = 200;
-
 	namespace colours {
 
 		using Colour = juce::Colour;

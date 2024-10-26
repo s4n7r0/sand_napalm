@@ -7,6 +7,9 @@ namespace napalm
 {
 	const int MAX_SAMPLES_IN_BUFFER = 4096 * 4 + 1; //adding one so it doesn't click when range is set to max
 
+	const float size_width = 400;
+	const float size_height = 200;
+
 	const juce::Range<float> bool_range({ 0, 1 });
 	const juce::Range<float> range_range({ 0, MAX_SAMPLES_IN_BUFFER - 1 }); //lol
 	const juce::Range<float> copies_range({ 1, 32 });

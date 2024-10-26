@@ -24,9 +24,10 @@ NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
       help("?")
 {
 
-    setup();
-
     using namespace components;
+
+    setSize(p.getEditorWidth(), p.getEditorHeight());
+    setup();
 
     help.set_bounds(help_bounds);
     help.button.setColour(1, colours::component_background);
@@ -48,7 +49,6 @@ NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
     amount.set_bounds(amount_bounds);
     amount.slider.setNumDecimalPlacesToDisplay(3);
     amount.slider.setTextBoxStyle(amount.slider.getTextBoxPosition(), 1, 50, 25);
-    amount.slider.setTextBoxIsEditable(false);
     amount.slider.setRange({ bool_range.getStart(), bool_range.getEnd() }, 0.0001);
 
     range.set_bounds(range_bounds);
@@ -73,7 +73,6 @@ NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
 
     copies.set_bounds(copies_bounds);
     copies.slider.setRange({ copies_range.getStart(), copies_range.getEnd() }, 1);
-    //copies.slider.setTextBoxIsEditable(false);
     copies.slider.setTextBoxStyle(copies.slider.getTextBoxPosition(), 1, 50, 25);
 
     amount_text_bounds = NapalmBounds(amount.slider.getBounds(), -20);
@@ -88,6 +87,8 @@ NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
     addAndMakeVisible(midi.button           , 0);
     addAndMakeVisible(invert.button         , 0);
     addAndMakeVisible(help.button           , 0);
+
+    resized();
 
 }
 
@@ -113,6 +114,9 @@ void NapalmAudioProcessorEditor::paint (juce::Graphics& g)
 
 void NapalmAudioProcessorEditor::resized()
 {   
+
+    audioProcessor.setEditorSize(getWidth(), getHeight());
+
     set_scales();
 
     IRec temp_bounds;
@@ -161,7 +165,7 @@ inline void NapalmAudioProcessorEditor::setup() {
     using SliderIds = juce::Slider::ColourIds;
     using TextButtonIds = juce::TextButton::ColourIds;
 
-    setSize(size_width, size_height);
+    //setSize(size_width, size_height);
     setResizeLimits(size_width, size_height, size_width * 4, size_height * 4); //why would anyone want it this large...
     setResizable(true, true);
     setRepaintsOnMouseActivity(true);

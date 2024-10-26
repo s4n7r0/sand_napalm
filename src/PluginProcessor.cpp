@@ -199,3 +199,19 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new NapalmAudioProcessor();
 }
+
+int NapalmAudioProcessor::getEditorWidth() {
+    auto size = apvts.state.getOrCreateChildWithName("lastSize", &undo);
+    return size.getProperty("width", napalm::size_width);
+}
+
+int NapalmAudioProcessor::getEditorHeight() {
+    auto size = apvts.state.getOrCreateChildWithName("lastSize", &undo);
+    return size.getProperty("height", napalm::size_height);
+}
+
+void NapalmAudioProcessor::setEditorSize(int width, int height) {
+    auto size = apvts.state.getOrCreateChildWithName("lastSize", &undo);
+    size.setProperty("width", width, &undo);
+    size.setProperty("height", height, &undo);
+}

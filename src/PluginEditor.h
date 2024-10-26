@@ -37,10 +37,6 @@ private:
     // access the processor object that created it.
     NapalmAudioProcessor& audioProcessor;
 
-    //this is so i can scale gui with proportions of my screen
-    const float my_screen_width{ 1920 };
-    const float my_screen_height{ 1080 };
-
     float text_size;
     float x_scale;
     float y_scale;

@@ -54,6 +54,11 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    //thank you daniel from foleys finest
+    int getEditorWidth();
+    int getEditorHeight();
+    void setEditorSize(int width, int height);
+
     napalm::Processor napalm_processor;
     juce::UndoManager undo;
     juce::AudioProcessorValueTreeState apvts;
