@@ -4,7 +4,7 @@
 
 namespace napalm {
 
-	const juce::String NAPALM_VER = "0.9.9";
+	const juce::String NAPALM_VER = "1.0.0";
 
 	using IRec = juce::Rectangle<int>;
 
@@ -126,7 +126,7 @@ namespace napalm {
 	const juce::String copies_text		("copies:       How many copies to create");
 	const juce::String contact_text		("If you have any issues, please contact me on \ndiscord: .sandr0");
 	const juce::String version_text		("Ver: " + NAPALM_VER);
-	const juce::URL    my_site		    ("https://www.github.com/s4n7r0/sand_napalm");
+	const juce::URL    my_site		    ("https://s4n7r0.gumroad.com/l/napalm");
 
 }
 
