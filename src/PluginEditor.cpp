@@ -14,8 +14,8 @@ using namespace napalm;
 //==============================================================================
 NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p), help_state{false}, url_timer(help.button),
-      delay_time(p, "amount", components),
-      time_multiplier(p, "multiplier", components),
+      amount(p, "amount", components),
+      range(p, "range", components),
       pitch(p, "pitch", components),
       pitchmax(p, "pitchmax", components),
       copies(p, "copies", components),
@@ -45,15 +45,15 @@ NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
     midi.button.setButtonText("midi");
     midi.button.onClick = [&]() {repaint(); };
 
-    delay_time.set_bounds(amount_bounds);
-    delay_time.slider.setNumDecimalPlacesToDisplay(3);
-    delay_time.slider.setTextBoxStyle(delay_time.slider.getTextBoxPosition(), 0, 50, 25);
-    delay_time.slider.setRange({ bool_range.getStart(), bool_range.getEnd() }, 0.0001);
+    amount.set_bounds(amount_bounds);
+    amount.slider.setNumDecimalPlacesToDisplay(3);
+    amount.slider.setTextBoxStyle(amount.slider.getTextBoxPosition(), 0, 50, 25);
+    amount.slider.setRange({ bool_range.getStart(), bool_range.getEnd() }, 0.0001);
 
-    time_multiplier.set_bounds(range_bounds);
-    time_multiplier.slider.setNumDecimalPlacesToDisplay(0);
-    time_multiplier.slider.setTextBoxStyle(time_multiplier.slider.getTextBoxPosition(), 0, 50, 25);
-    time_multiplier.slider.setRange({ multiplier_range.getStart(), multiplier_range.getEnd() }, 1);
+    range.set_bounds(range_bounds);
+    range.slider.setNumDecimalPlacesToDisplay(0);
+    range.slider.setTextBoxStyle(range.slider.getTextBoxPosition(), 0, 50, 25);
+    range.slider.setRange({ range_range.getStart(), range_range.getEnd() }, 1);
 
     pitch.set_bounds(pitch_bounds);
     pitch.slider.setRange({ pitch_range.getStart(), pitch_range.getEnd() }, 0.0001f);
@@ -75,12 +75,12 @@ NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
     copies.slider.setRange({ copies_range.getStart(), copies_range.getEnd() }, 1);
     copies.slider.setTextBoxStyle(copies.slider.getTextBoxPosition(), 0, 50, 25);
 
-    amount_text_bounds = NapalmBounds(delay_time.slider.getBounds(), -20);
-    multiplier_text_bounds = NapalmBounds(time_multiplier.slider.getBounds(), -20);
+    amount_text_bounds = NapalmBounds(amount.slider.getBounds(), -20);
+    range_text_bounds = NapalmBounds(range.slider.getBounds(), -20);
     copies_text_bounds = NapalmBounds(copies.slider.getBounds(), -20);
 
-    addAndMakeVisible(delay_time.slider     , 0);
-    addAndMakeVisible(time_multiplier.slider, 0);
+    addAndMakeVisible(amount.slider     , 0);
+    addAndMakeVisible(range.slider, 0);
     addChildComponent(pitch.slider          , 0);
     addChildComponent(pitchmax.slider       , 0);
     addChildComponent(copies.slider         , 0);
@@ -97,8 +97,6 @@ NapalmAudioProcessorEditor::~NapalmAudioProcessorEditor()
 //==============================================================================
 void NapalmAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-
     g.fillAll (colours::background);
     g.setColour (colours::text);
     
@@ -107,14 +105,9 @@ void NapalmAudioProcessorEditor::paint (juce::Graphics& g)
 
     draw_labels(g);
 
-    //if(getWidth() == size_width)
-    //g.drawImage(secret, { 0, (size_height * 4) - 128 ,128,128 });
-
     draw_help(g);
 
     show_or_hide();
-
-
 }
 
 void NapalmAudioProcessorEditor::resized()
@@ -131,16 +124,16 @@ void NapalmAudioProcessorEditor::resized()
     temp_bounds.setX(getWidth() - 35 * abs_scale);
     help.button.setBounds(temp_bounds);
 
-    temp_bounds = delay_time.original_bounds;
+    temp_bounds = amount.original_bounds;
     temp_bounds.setWidth(abs_slider);
-    delay_time.slider.setBounds(temp_bounds);
-    delay_time.slider.setTransform(juce::AffineTransform::scale(abs_scale, abs_scale));
+    amount.slider.setBounds(temp_bounds);
+    amount.slider.setTransform(juce::AffineTransform::scale(abs_scale, abs_scale));
 
-    temp_bounds = time_multiplier.original_bounds;
+    temp_bounds = range.original_bounds;
     temp_bounds.setWidth(abs_slider);
 
-    time_multiplier.slider.setBounds(temp_bounds);
-    time_multiplier.slider.setTransform(juce::AffineTransform::scale(abs_scale, abs_scale));
+    range.slider.setBounds(temp_bounds);
+    range.slider.setTransform(juce::AffineTransform::scale(abs_scale, abs_scale));
 
     pitch.slider.setBounds(temp_bounds);
     pitch.slider.setTransform(juce::AffineTransform::scale(abs_scale, abs_scale));
@@ -179,4 +172,13 @@ inline void NapalmAudioProcessorEditor::setup() {
     help_texts.push_back(range_text);
     help_texts.push_back(pitch_text);
     help_texts.push_back(copies_text);
+
+    // easter egg...
+    hehe.setBounds( { 0, (int)(size_height * 4) - 20, 20, 20 } );
+    hehe.setButtonText("?");
+    hehe.setColour(juce::TextButton::ColourIds::buttonColourId, napalm::colours::invisible);
+    hehe.setColour(juce::ComboBox::ColourIds::outlineColourId, napalm::colours::invisible);
+    hehe.onClick = []() {juce::URL("https://i.kym-cdn.com/photos/images/newsfeed/002/564/498/74a.jpg").launchInDefaultBrowser(); };
+    
+    addChildComponent(hehe);
 }

@@ -144,24 +144,21 @@ void NapalmAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
 
     if (napalm_processor.midi_input != midi) napalm_processor.midi_switch(midi);
 
-    if (napalm_processor.midi_input) {
+    if (midiMessages.data.size() > 0) {
+        juce::MidiMessage message(0xf0);
+        juce::MidiBuffer::Iterator i(midiMessages);
+        int frame = 0;
 
-        if (napalm_processor.midi_note) {
-            float pitch_and_semitones = *apvts.getRawParameterValue("pitch") * *apvts.getRawParameterValue("pitchmax");
-            napalm_processor.midi_set_length(pitch_and_semitones);
-        }
-
-        if (midiMessages.data.size() > 0) {
-            juce::MidiMessage message(0xf0);
-            juce::MidiBuffer::Iterator i(midiMessages);
-            int frame = 0;
-
-            while (i.getNextEvent(message, frame)) {
-                if (message.isNoteOnOrOff()) {
-                    napalm_processor.midi_set_note(message);
-                }
+        while (i.getNextEvent(message, frame)) {
+            if (message.isNoteOnOrOff()) {
+                napalm_processor.midi_set_note(message);
             }
         }
+    }
+
+    if (napalm_processor.midi_note) {
+        double pitch_and_semitones = *apvts.getRawParameterValue("pitch") * *apvts.getRawParameterValue("pitchmax");
+        napalm_processor.midi_set_length(pitch_and_semitones);
     }
 
     napalm_processor.process(buffer, apvts);

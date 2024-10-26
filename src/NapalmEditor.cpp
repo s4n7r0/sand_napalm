@@ -20,12 +20,12 @@ void NapalmAudioProcessorEditor::show_or_hide() {
 
 	if (!help_state) {
 		if (midi.button.getToggleState()) {
-			time_multiplier.slider.setVisible(false);
+			range.slider.setVisible(false);
 			pitch.slider.setVisible(true);
 			pitchmax.slider.setVisible(true);
 		}
 		else {
-			time_multiplier.slider.setVisible(true);
+			range.slider.setVisible(true);
 			pitch.slider.setVisible(false);
 			pitchmax.slider.setVisible(false);
 		}
@@ -54,7 +54,7 @@ void NapalmAudioProcessorEditor::draw_labels(juce::Graphics& g) {
 	temp_bounds.setWidth(slider_width);
 	g.drawFittedText(juce::String("amount"), temp_bounds, juce::Justification::right, 4, 0);
 
-	temp_bounds = multiplier_text_bounds.bounds;
+	temp_bounds = range_text_bounds.bounds;
 	temp_bounds *= abs_scale;
 	temp_bounds.setWidth(slider_width);
 
@@ -75,6 +75,8 @@ void NapalmAudioProcessorEditor::draw_labels(juce::Graphics& g) {
 	temp_bounds *= abs_scale;
 	temp_bounds.setWidth(slider_width);
 	g.drawFittedText(juce::String("copies"), temp_bounds, juce::Justification::right, 4, 0);
+
+	//if (getWidth() == size_width) hehe.setVisible(true); else hehe.setVisible(false);
 }
 
 void NapalmAudioProcessorEditor::draw_help(juce::Graphics& g) {

@@ -128,7 +128,5 @@ namespace napalm {
 	const juce::String version_text		("Ver: " + NAPALM_VER);
 	const juce::URL    my_site		    ("https://www.github.com/s4n7r0/sand_napalm");
 
-	//const juce::Image secret(juce::ImageCache::getFromMemory((void*)hehe, 6744));
-
 }
 

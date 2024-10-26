@@ -8,8 +8,7 @@ namespace napalm
 	const int MAX_SAMPLES_IN_BUFFER = 4096 * 4 + 1; //adding one so it doesn't click when range is set to max
 
 	const juce::Range<float> bool_range({ 0, 1 });
-	const juce::Range<float> a_range({ 0, 1 });
-	const juce::Range<float> multiplier_range({ 0, MAX_SAMPLES_IN_BUFFER - 1 }); //lol
+	const juce::Range<float> range_range({ 0, MAX_SAMPLES_IN_BUFFER - 1 }); //lol
 	const juce::Range<float> copies_range({ 1, 32 });
 	const juce::Range<float> pitch_range({ -1, 1 });
 	const juce::Range<float> pitchmax_range({ 1, 48 });
@@ -23,7 +22,7 @@ namespace napalm
 	using Attributes = juce::AudioProcessorValueTreeStateParameterAttributes;
 	using paramID = juce::ParameterID;
 
-	enum PARAMS_IDS {amount, multiplier, pitch, pitchmax, copies, invert, midi};
+	enum PARAMS_IDS {amount, range, pitch, pitchmax, copies, invert, midi};
 
 	inline void add_params(UniquePVector& params) {
 
@@ -36,15 +35,15 @@ namespace napalm
 			};
 
 		params.push_back( std::make_unique<APVTS::Parameter>(paramID{"amount", amount}, "Amount", 
-			NRange{ bool_range.getStart(), bool_range.getEnd(), 0.0000001f}, 0,
+			NRange{ bool_range.getStart(), bool_range.getEnd(), 0.0000001f, 2}, 0,
 			Attributes()
 				.withStringFromValueFunction(string_from_val)
 				.withValueFromStringFunction(val_from_string)
 			)
 		);
 
-		params.push_back(std::make_unique<APVTS::Parameter>(paramID{ "multiplier", multiplier }, "Multiplier", 
-			NRange{multiplier_range.getStart(), multiplier_range.getEnd(), 0.1f, 0.5f}, 0,
+		params.push_back(std::make_unique<APVTS::Parameter>(paramID{ "range", range, }, "Range", 
+			NRange{range_range.getStart(), range_range.getEnd(), 0.1f, 0.5f}, 0,
 			Attributes()
 				.withStringFromValueFunction(string_from_val)
 				.withValueFromStringFunction(val_from_string)

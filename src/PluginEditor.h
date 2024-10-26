@@ -48,23 +48,24 @@ private:
 
     std::vector<juce::String> components;
     std::vector<juce::String> help_texts;
+    bool help_state;
 
     napalm::components::AttachedToggleButton invert;
     napalm::components::AttachedToggleButton midi;
     napalm::components::TextButtonBounds help;
-    napalm::components::AttachedSlider delay_time;
-    napalm::components::AttachedSlider time_multiplier;
+    napalm::components::AttachedSlider amount;
+    napalm::components::AttachedSlider range;
     napalm::components::AttachedSlider pitch;
     napalm::components::AttachedSlider pitchmax;
     napalm::components::AttachedSlider copies;
 
     napalm::NapalmBounds amount_text_bounds;
-    napalm::NapalmBounds multiplier_text_bounds;
+    napalm::NapalmBounds range_text_bounds;
     napalm::NapalmBounds copies_text_bounds;
 
     napalm::components::URLTimer url_timer;
 
-    bool help_state;
+    juce::TextButton hehe;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NapalmAudioProcessorEditor)
 };
