@@ -71,4 +71,4 @@ If you like it, consider donating thru [gumroad!](https://s4n7r0.gumroad.com/l/n
 [Soundcloud](https://www.soundcloud.com/s4n7r0) <br>
 [Twitter](https://www.twitter.com/s4n7r0) <br>
 [Bluesky](https://bsky.app/profile/sandr0.bsky.social) <br>
-[Bandcamp](https://www.s4n7r0.bandcamp.com/track/dragonfly) <br>
+[Bandcamp](https://s4n7r0.bandcamp.com/track/dragonfly) <br>
