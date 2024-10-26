@@ -22,13 +22,14 @@ namespace napalm
 	using Attributes = juce::AudioProcessorValueTreeStateParameterAttributes;
 	using paramID = juce::ParameterID;
 
-	enum PARAMS_IDS {amount, range, pitch, pitchmax, copies, invert, midi};
+	enum PARAMS_IDS {amount, range, pitch, pitchmax, copies, invert, midi, help}; //also components ids
 
 	inline void add_params(UniquePVector& params) {
 
-		const auto string_from_val = [](float value, int max_length) {
-			return juce::String(value, max_length);
-			};
+		//this is stupid, idk of any better way
+		const auto string_from_val_0d = [](float value, int max_length) { return juce::String(value, 0); };
+		const auto string_from_val_2d = [](float value, int max_length) { return juce::String(value, 2); };
+		const auto string_from_val_4d = [](float value, int max_length) { return juce::String(value, 4); };
 
 		const auto val_from_string = [](juce::String value) {
 			return std::stod(value.toStdString());
@@ -37,7 +38,7 @@ namespace napalm
 		params.push_back( std::make_unique<APVTS::Parameter>(paramID{"amount", amount}, "Amount", 
 			NRange{ bool_range.getStart(), bool_range.getEnd(), 0.0000001f, 2}, 0,
 			Attributes()
-				.withStringFromValueFunction(string_from_val)
+				.withStringFromValueFunction(string_from_val_4d)
 				.withValueFromStringFunction(val_from_string)
 			)
 		);
@@ -45,35 +46,35 @@ namespace napalm
 		params.push_back(std::make_unique<APVTS::Parameter>(paramID{ "range", range, }, "Range", 
 			NRange{range_range.getStart(), range_range.getEnd(), 0.1f, 0.5f}, 0,
 			Attributes()
-				.withStringFromValueFunction(string_from_val)
+				.withStringFromValueFunction(string_from_val_0d)
 				.withValueFromStringFunction(val_from_string)
 			)
 		);
 
 		params.push_back(std::make_unique<APVTS::Parameter>(paramID{ "pitch", pitch }, "Pitch", NRange{pitch_range, 0.0001f}, 0,
 			Attributes()
-				.withStringFromValueFunction(string_from_val)
+				.withStringFromValueFunction(string_from_val_2d)
 				.withValueFromStringFunction(val_from_string)
 			)
 		);
 		
 		params.push_back(std::make_unique<APVTS::Parameter>(paramID{ "pitchmax", pitchmax }, "Pitch Range", NRange{pitchmax_range, 1.f}, 0,
 			Attributes()
-				.withStringFromValueFunction(string_from_val)
+				.withStringFromValueFunction(string_from_val_0d)
 				.withValueFromStringFunction(val_from_string)
 			)
 		);
 
 		params.push_back(std::make_unique<APVTS::Parameter>(paramID{ "copies", copies }, "Copies", NRange{copies_range, 1}, 1,
 			Attributes()
-				.withStringFromValueFunction(string_from_val)
+				.withStringFromValueFunction(string_from_val_0d)
 				.withValueFromStringFunction(val_from_string)
 			)
 		);		
 
 		params.push_back(std::make_unique<APVTS::Parameter>(paramID{ "invert", invert }, "Invert Phase", NRange{bool_range, 1}, 0,
 			Attributes()
-				.withStringFromValueFunction(string_from_val)
+				.withStringFromValueFunction(string_from_val_0d)
 				.withValueFromStringFunction(val_from_string)
 				.withBoolean(true)
 			)
@@ -81,7 +82,7 @@ namespace napalm
 
 		params.push_back(std::make_unique<APVTS::Parameter>(paramID{ "midi", midi }, "MIDI Input", NRange{bool_range, 1}, 0,
 			Attributes()
-				.withStringFromValueFunction(string_from_val)
+				.withStringFromValueFunction(string_from_val_0d)
 				.withValueFromStringFunction(val_from_string)
 				.withBoolean(true)
 			)

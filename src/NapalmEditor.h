@@ -90,14 +90,25 @@ namespace napalm {
 				juce::Component& component;
 		};
 
-		const IRec help_bounds({ (int)size_width - 35, 10, 25, 25 });
-		const IRec invert_bounds({ 37, 10, 100, 25 });
-		const IRec midi_bounds({ 137, 10, 100, 25 });
 		const IRec amount_bounds({ 25, 35, (int)(size_width / 1.25), 50 });
 		const IRec range_bounds({ 25, 85, (int)(size_width / 1.25), 50 });
 		const IRec pitch_bounds({ 25, 85, (int)(size_width / 1.25), 50});
 		const IRec pitchmax_bounds({(int)(size_width / 1.175), 85, 50, 50 });
 		const IRec copies_bounds({ 25, 135, (int)(size_width / 1.25), 50 });
+		const IRec help_bounds({ (int)size_width - 35, 10, 25, 25 });
+		const IRec invert_bounds({ 37, 10, 100, 25 });
+		const IRec midi_bounds({ 137, 10, 100, 25 });
+
+		const std::vector<IRec> components_bounds {
+												   amount_bounds, 
+												   range_bounds, 
+												   pitch_bounds, 
+												   pitchmax_bounds, 
+												   copies_bounds,
+												   help_bounds,
+												   invert_bounds, 
+			                                       midi_bounds 
+												   };
 
 	}
 

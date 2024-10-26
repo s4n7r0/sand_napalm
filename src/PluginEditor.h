@@ -29,6 +29,7 @@ public:
     void set_scales();
     void draw_labels(juce::Graphics&);
     void draw_help(juce::Graphics&);
+    [[unused]] void setup_components(); // for future code tidy up
     void setup();
 
 private:
@@ -46,7 +47,7 @@ private:
     float abs_scale;
     float slider_width;
 
-    std::vector<juce::String> components;
+    std::vector<juce::String> components; //refactor it so it contains componentBounds
     std::vector<juce::String> help_texts;
     bool help_state;
 

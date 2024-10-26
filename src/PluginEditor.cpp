@@ -47,19 +47,19 @@ NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
 
     amount.set_bounds(amount_bounds);
     amount.slider.setNumDecimalPlacesToDisplay(3);
-    amount.slider.setTextBoxStyle(amount.slider.getTextBoxPosition(), 0, 50, 25);
+    amount.slider.setTextBoxStyle(amount.slider.getTextBoxPosition(), 1, 50, 25);
+    amount.slider.setTextBoxIsEditable(false);
     amount.slider.setRange({ bool_range.getStart(), bool_range.getEnd() }, 0.0001);
 
     range.set_bounds(range_bounds);
     range.slider.setNumDecimalPlacesToDisplay(0);
-    range.slider.setTextBoxStyle(range.slider.getTextBoxPosition(), 0, 50, 25);
+    range.slider.setTextBoxStyle(range.slider.getTextBoxPosition(), 1, 50, 25);
     range.slider.setRange({ range_range.getStart(), range_range.getEnd() }, 1);
 
     pitch.set_bounds(pitch_bounds);
     pitch.slider.setRange({ pitch_range.getStart(), pitch_range.getEnd() }, 0.0001f);
     pitch.slider.setNumDecimalPlacesToDisplay(0);
     pitch.slider.setTextBoxStyle(pitch.slider.getTextBoxPosition(), 1, 50, 25);
-    pitch.slider.setTextBoxIsEditable(false);
     pitch.slider.setColour(juce::Slider::textBoxTextColourId, napalm::colours::invisible);
     pitch.slider.onDragEnd = [&]() {pitch.slider.setValue(0); };
 
@@ -73,7 +73,8 @@ NapalmAudioProcessorEditor::NapalmAudioProcessorEditor (NapalmAudioProcessor& p)
 
     copies.set_bounds(copies_bounds);
     copies.slider.setRange({ copies_range.getStart(), copies_range.getEnd() }, 1);
-    copies.slider.setTextBoxStyle(copies.slider.getTextBoxPosition(), 0, 50, 25);
+    //copies.slider.setTextBoxIsEditable(false);
+    copies.slider.setTextBoxStyle(copies.slider.getTextBoxPosition(), 1, 50, 25);
 
     amount_text_bounds = NapalmBounds(amount.slider.getBounds(), -20);
     range_text_bounds = NapalmBounds(range.slider.getBounds(), -20);
@@ -148,6 +149,11 @@ void NapalmAudioProcessorEditor::resized()
     temp_bounds.setWidth(abs_slider);
     copies.slider.setBounds(temp_bounds);
     copies.slider.setTransform(juce::AffineTransform::scale(abs_scale, abs_scale));
+}
+
+[[unused]] inline void NapalmAudioProcessorEditor::setup_components() {
+    for (auto component : components) {
+    }
 }
 
 inline void NapalmAudioProcessorEditor::setup() {
