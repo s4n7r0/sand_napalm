@@ -22,7 +22,7 @@ In short: Square4 but as an audio effect
 | MIDI         | Uses midi input instead of given range <br> Works by converting one cycle of a note frequency to it's size in samples, which is then used as range <br> Useful for consistency between pitches |
 | Amount       | Shift copies by an amount |
 | Range        | Specifies maximum range to which copies can be shifted to (in samples) <br> Works by multiplying amount <br> Ignored if midi input is on |
-| Pitch        | Shifts copies by semitones <br> Ignored if midi input is off |
+| Pitch        | Shifts copies by semitones <br> Move the number to the right to change the pitch range <br> Ignored if midi input is off |
 | Copies       | How many copies to create |
 
 ## How to build from source
