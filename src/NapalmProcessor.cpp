@@ -2,7 +2,7 @@
 #include "PluginEditor.h"
 #include "NapalmProcessor.h"
 
-napalm::Processor::Processor() : sample_rate{ 44100 } {}
+//napalm::Processor::Processor(float ) : sample_rate{ 44100 } {}
 
 void napalm::Processor::fill_buffer(juce::AudioBuffer<float>& input_buffer) {
 
@@ -34,6 +34,7 @@ void napalm::Processor::process(juce::AudioBuffer<float>& input_buffer,const nap
 	delay_time = smooth_time.skip(num_samples);
 	delay_time *= smooth_multiplier.skip(num_samples);
 	delay_copies = smooth_copies.skip(num_samples);
+	midi_note_length = smooth_pitch.skip(num_samples);
 
 	if (buffer_pos <= delay_time) return;
 	if (delay_counter >= buffer_pos) delay_counter = 0;
@@ -90,12 +91,11 @@ void napalm::Processor::midi_set_note(juce::MidiMessage midi) {
 	midi_note = midi.getNoteNumber();
 }
 
-void napalm::Processor::midi_set_length(float note) {
-	//double hz = midi.getMidiNoteInHertz(midi.getNoteNumber());
-	float hz = mtof(note);
-	float length = (1 / hz) * sample_rate; //convert frequency to length of one cycle in samples
+void napalm::Processor::midi_set_length(float pitch) {
+	const float hz = mtof(midi_note + pitch);
+	const float length = (1 / hz) * sample_rate; //convert frequency to length of one cycle in samples
 
-	midi_note_length = length;
+	smooth_pitch.setTargetValue(length);
 	set_multiplier();
 }
 
@@ -103,4 +103,5 @@ inline void napalm::Processor::smooth_reset(float target) {
 	smooth_multiplier.reset(sample_rate, target);
 	smooth_time.reset(sample_rate, target);
 	smooth_copies.reset(sample_rate, target / 10);
+	smooth_pitch.reset(sample_rate, target / 10);
 }

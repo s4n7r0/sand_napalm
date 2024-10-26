@@ -5,7 +5,7 @@
 
 namespace napalm
 {
-	const int MAX_SAMPLES_IN_BUFFER = 4096 * 4;
+	const int MAX_SAMPLES_IN_BUFFER = 4096 * 4 + 1; //adding one so it doesn't click when range is set to max
 
 	const juce::Range<float> bool_range({ 0, 1 });
 	const juce::Range<float> a_range({ 0, 1 });
@@ -36,7 +36,7 @@ namespace napalm
 			};
 
 		params.push_back( std::make_unique<APVTS::Parameter>(paramID{"amount", amount}, "Amount", 
-			NRange{ bool_range.getStart(), bool_range.getEnd(), 0.0000001f, 2}, 0,
+			NRange{ bool_range.getStart(), bool_range.getEnd(), 0.0000001f}, 0,
 			Attributes()
 				.withStringFromValueFunction(string_from_val)
 				.withValueFromStringFunction(val_from_string)

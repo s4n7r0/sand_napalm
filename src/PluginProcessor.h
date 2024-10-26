@@ -59,7 +59,7 @@ public:
     juce::AudioProcessorValueTreeState apvts;
 private:
 
-    int buffer_size;
+    int buffer_size{ 0 };
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NapalmAudioProcessor)
 };

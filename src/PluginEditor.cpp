@@ -107,8 +107,8 @@ void NapalmAudioProcessorEditor::paint (juce::Graphics& g)
 
     draw_labels(g);
 
-    if(getWidth() == size_width)
-    g.drawImage(secret, { 0, (size_height * 4) - 128 ,128,128 });
+    //if(getWidth() == size_width)
+    //g.drawImage(secret, { 0, (size_height * 4) - 128 ,128,128 });
 
     draw_help(g);
 

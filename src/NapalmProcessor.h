@@ -3,11 +3,11 @@
 
 namespace napalm {
 
-	const float smooth_target = 0.1;
+	const float smooth_target = 0.01;
 
 	class Processor {
 	public:
-		Processor();
+		Processor(double sampleRate) : sample_rate{ sampleRate } { smooth_reset(smooth_target); };
 
 		void fill_buffer(juce::AudioBuffer<float>& buffer);
 
@@ -19,20 +19,18 @@ namespace napalm {
 		void midi_switch(bool);
 		void midi_set_length(float);
 		void midi_set_note(juce::MidiMessage);
+
 		//thank you Ben Vining
 		float mtof(float midi) {
 			return 440.f * std::pow(2.0f, ((midi - 69.0f) / 12.0f));
 		}
 
-		juce::LinearSmoothedValue<float> smooth_time;
-		juce::LinearSmoothedValue<float> smooth_multiplier;
-		juce::LinearSmoothedValue<float> smooth_copies;
 		inline void smooth_reset(float);
 
-		float midi_note{ 0 };
 		bool midi_input{ false };
+		float midi_note{ 0 };
 
-		float sample_rate;
+		double sample_rate;
 
 	private:
 
@@ -43,6 +41,11 @@ namespace napalm {
 		int delay_counter{ 0 };
 		float delay_copies{ 1 };
 		float delay_time_multiplier{ 1 };
+
+		juce::LinearSmoothedValue<float> smooth_time;
+		juce::LinearSmoothedValue<float> smooth_multiplier;
+		juce::LinearSmoothedValue<float> smooth_copies;
+		juce::LinearSmoothedValue<float> smooth_pitch;
 
 		float midi_note_length{ 0 };
 

@@ -12,7 +12,7 @@
 //==============================================================================
 NapalmAudioProcessor::NapalmAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
-    : buffer_size{ 0 }, undo(), 
+    : napalm_processor(getSampleRate()), undo(), 
     apvts(*this, &undo, "PARAMETERS", napalm::create_layout()),
     AudioProcessor(BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
@@ -131,7 +131,7 @@ bool NapalmAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) c
 
 void NapalmAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    juce::ScopedNoDenormals noDenormals;
+    //juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
@@ -141,11 +141,15 @@ void NapalmAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
     bool midi = (bool)*apvts.getRawParameterValue("midi");
 
     napalm_processor.fill_buffer(buffer);
+
     if (napalm_processor.midi_input != midi) napalm_processor.midi_switch(midi);
 
     if (napalm_processor.midi_input) {
 
-        napalm_processor.midi_set_length(napalm_processor.midi_note + *apvts.getRawParameterValue("pitch"));
+        if (napalm_processor.midi_note) {
+            float pitch_and_semitones = *apvts.getRawParameterValue("pitch") * *apvts.getRawParameterValue("pitchmax");
+            napalm_processor.midi_set_length(pitch_and_semitones);
+        }
 
         if (midiMessages.data.size() > 0) {
             juce::MidiMessage message(0xf0);
@@ -153,17 +157,15 @@ void NapalmAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
             int frame = 0;
 
             while (i.getNextEvent(message, frame)) {
-                napalm_processor.midi_set_note(message);
+                if (message.isNoteOnOrOff()) {
+                    napalm_processor.midi_set_note(message);
+                }
             }
         }
     }
 
     napalm_processor.process(buffer, apvts);
 
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
-    }
 }
 
 //==============================================================================

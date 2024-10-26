@@ -4,7 +4,7 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" pluginCharacteristicsValue="pluginWantsMidiIn"
               pluginFormats="buildStandalone,buildVST3" pluginName="sand_napalm"
               pluginManufacturer="sandr0" companyWebsite="www.github.com/s4n7r0"
-              version="0.9.5">
+              version="1.0.0">
   <MAINGROUP id="n88TLo" name="Napalm">
     <GROUP id="{59655F8D-EF4D-BFB7-4180-83647489CAED}" name="src">
       <FILE id="SQW2tQ" name="NapalmEditor.cpp" compile="1" resource="0"
@@ -44,7 +44,7 @@
     <VS2022 targetFolder="Builds/VisualStudio2022">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" targetName="sand_napalm"/>
-        <CONFIGURATION isDebug="0" name="Release" targetName="sand_napalm"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="sand_napalm" optimisation="3"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="../../../../../../../../JUCE2/modules"/>
