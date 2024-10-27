@@ -10,7 +10,7 @@ Creates n equally spaced copies of input, up to the specified range, <br>
 which then can be shifted by an amount up to the range.
 
 So it basically works like a phaser, but it doesn't use all-pass filters, <br> 
-and instead works by shifting copies of an input (kinda like a combs filter).
+and instead works by shifting copies of an input (kinda like a combs filter or flanger).
 
 In short: Square4 but as an audio effect
 
