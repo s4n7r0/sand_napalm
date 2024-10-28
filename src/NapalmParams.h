@@ -6,7 +6,7 @@
 namespace napalm
 {
 	const int MAX_SAMPLES_RANGE = 4096 * 4 + 1; //adding one so it doesn't click when range is set to max
-	const int MAX_SAMPLES_IN_BUFFER = MAX_SAMPLES_RANGE * 8; // (2 << 16) + 4
+	const int MAX_SAMPLES_IN_BUFFER = MAX_SAMPLES_RANGE * 32; // (2 << 16) + 4
 	const float size_width = 400;
 	const float size_height = 200;
 
