@@ -4,7 +4,7 @@
 
 namespace napalm {
 
-	const juce::String NAPALM_VER = "1.0.0";
+	const juce::String NAPALM_VER = "1.0.1";
 
 	using IRec = juce::Rectangle<int>;
 

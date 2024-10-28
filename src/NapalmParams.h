@@ -5,13 +5,13 @@
 
 namespace napalm
 {
-	const int MAX_SAMPLES_IN_BUFFER = 4096 * 4 + 1; //adding one so it doesn't click when range is set to max
-
+	const int MAX_SAMPLES_RANGE = 4096 * 4 + 1; //adding one so it doesn't click when range is set to max
+	const int MAX_SAMPLES_IN_BUFFER = MAX_SAMPLES_RANGE * 8; // (2 << 16) + 4
 	const float size_width = 400;
 	const float size_height = 200;
 
 	const juce::Range<float> bool_range({ 0, 1 });
-	const juce::Range<float> range_range({ 0, MAX_SAMPLES_IN_BUFFER - 1 }); //lol
+	const juce::Range<float> range_range({ 0, MAX_SAMPLES_RANGE - 1 }); //lol
 	const juce::Range<float> copies_range({ 1, 32 });
 	const juce::Range<float> pitch_range({ -1, 1 });
 	const juce::Range<float> pitchmax_range({ 1, 48 });
@@ -39,7 +39,7 @@ namespace napalm
 			};
 
 		params.push_back( std::make_unique<APVTS::Parameter>(paramID{"amount", amount}, "Amount", 
-			NRange{ bool_range.getStart(), bool_range.getEnd(), 0.0000001f, 2}, 0,
+			NRange{ bool_range.getStart(), bool_range.getEnd(), 0.0000001f, 2.f}, 0.f,
 			Attributes()
 				.withStringFromValueFunction(string_from_val_4d)
 				.withValueFromStringFunction(val_from_string)
@@ -47,35 +47,35 @@ namespace napalm
 		);
 
 		params.push_back(std::make_unique<APVTS::Parameter>(paramID{ "range", range, }, "Range", 
-			NRange{range_range.getStart(), range_range.getEnd(), 0.1f, 0.5f}, 0,
+			NRange{range_range.getStart(), range_range.getEnd(), 0.1f, 0.5f}, 0.f,
 			Attributes()
 				.withStringFromValueFunction(string_from_val_0d)
 				.withValueFromStringFunction(val_from_string)
 			)
 		);
 
-		params.push_back(std::make_unique<APVTS::Parameter>(paramID{ "pitch", pitch }, "Pitch", NRange{pitch_range, 0.0001f}, 0,
+		params.push_back(std::make_unique<APVTS::Parameter>(paramID{ "pitch", pitch }, "Pitch", NRange{pitch_range, 0.0001f}, 0.f,
 			Attributes()
 				.withStringFromValueFunction(string_from_val_2d)
 				.withValueFromStringFunction(val_from_string)
 			)
 		);
 		
-		params.push_back(std::make_unique<APVTS::Parameter>(paramID{ "pitchmax", pitchmax }, "Pitch Range", NRange{pitchmax_range, 1.f}, 0,
+		params.push_back(std::make_unique<APVTS::Parameter>(paramID{ "pitchmax", pitchmax }, "Pitch Range", NRange{pitchmax_range, 1.f}, 1.f,
 			Attributes()
 				.withStringFromValueFunction(string_from_val_0d)
 				.withValueFromStringFunction(val_from_string)
 			)
 		);
 
-		params.push_back(std::make_unique<APVTS::Parameter>(paramID{ "copies", copies }, "Copies", NRange{copies_range, 1}, 1,
+		params.push_back(std::make_unique<APVTS::Parameter>(paramID{ "copies", copies }, "Copies", NRange{copies_range, 1.f}, 1.f,
 			Attributes()
 				.withStringFromValueFunction(string_from_val_0d)
 				.withValueFromStringFunction(val_from_string)
 			)
 		);		
 
-		params.push_back(std::make_unique<APVTS::Parameter>(paramID{ "invert", invert }, "Invert Phase", NRange{bool_range, 1}, 0,
+		params.push_back(std::make_unique<APVTS::Parameter>(paramID{ "invert", invert }, "Invert Phase", NRange{bool_range, 1.f}, 0.f,
 			Attributes()
 				.withStringFromValueFunction(string_from_val_0d)
 				.withValueFromStringFunction(val_from_string)
@@ -83,7 +83,7 @@ namespace napalm
 			)
 		);		
 
-		params.push_back(std::make_unique<APVTS::Parameter>(paramID{ "midi", midi }, "MIDI Input", NRange{bool_range, 1}, 0,
+		params.push_back(std::make_unique<APVTS::Parameter>(paramID{ "midi", midi }, "MIDI Input", NRange{bool_range, 1.f}, 0.f,
 			Attributes()
 				.withStringFromValueFunction(string_from_val_0d)
 				.withValueFromStringFunction(val_from_string)

@@ -7,7 +7,7 @@ namespace napalm {
 
 	class Processor {
 	public:
-		Processor(double sampleRate) : sample_rate{ sampleRate } { smooth_reset(smooth_target); };
+		Processor() {};
 
 		void fill_buffer(juce::AudioBuffer<float>& buffer);
 
@@ -30,7 +30,7 @@ namespace napalm {
 		bool midi_input{ false };
 		float midi_note{ 0 };
 
-		double sample_rate;
+		double sample_rate{ 44100 }; //who would even use 22050 hz?
 
 	private:
 

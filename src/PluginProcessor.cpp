@@ -12,7 +12,7 @@
 //==============================================================================
 NapalmAudioProcessor::NapalmAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
-    : napalm_processor(getSampleRate()), undo(), 
+    : napalm_processor(), undo(), 
     apvts(*this, &undo, "PARAMETERS", napalm::create_layout()),
     AudioProcessor(BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
