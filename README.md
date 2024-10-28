@@ -9,8 +9,8 @@
 Creates n equally spaced copies of input, up to the specified range, <br>
 which then can be shifted by an amount up to the range.
 
-So it basically works like a phaser, but it doesn't use an all-pass phaser, <br> 
-and instead works by shifting copies of an input (kinda like a combs filter).
+So it basically works like a phaser, but it doesn't use all-pass filters, <br> 
+and instead works by shifting copies of an input (kinda like a combs filter or flanger).
 
 In short: Square4 but as an audio effect
 
@@ -71,4 +71,4 @@ If you like it, consider donating thru [gumroad!](https://s4n7r0.gumroad.com/l/n
 [Soundcloud](https://www.soundcloud.com/s4n7r0) <br>
 [Twitter](https://www.twitter.com/s4n7r0) <br>
 [Bluesky](https://bsky.app/profile/sandr0.bsky.social) <br>
-[Bandcamp](https://www.s4n7r0.bandcamp.com/track/dragonfly) <br>
+[Bandcamp](https://s4n7r0.bandcamp.com/track/dragonfly) <br>
