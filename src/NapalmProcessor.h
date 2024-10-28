@@ -31,6 +31,7 @@ namespace napalm {
 		float midi_note{ 0 };
 
 		double sample_rate{ 44100 }; //who would even use 22050 hz?
+		float adjust_for_sample_rate{ 1 };
 
 	private:
 

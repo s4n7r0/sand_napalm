@@ -34,7 +34,8 @@ void napalm::Processor::process(juce::AudioBuffer<float>& input_buffer,const nap
 	const int num_samples = input_buffer.getNumSamples();
 
 	amount = smooth_amount.skip(num_samples);
-	amount *= smooth_range.skip(num_samples);
+	//higher sample rates means there are more samples stored in buffer (duh)
+	amount *= smooth_range.skip(num_samples) * adjust_for_sample_rate;
 	delay_copies = smooth_copies.skip(num_samples);
 	midi_note_length = smooth_pitch.skip(num_samples);
 
@@ -97,7 +98,7 @@ void napalm::Processor::midi_set_note(juce::MidiMessage midi) {
 
 void napalm::Processor::midi_set_length(double pitch) {
 	const double hz = mtod(midi_note + pitch);
-	const double length = (1 / hz) * sample_rate; //convert frequency to length of one cycle in samples
+	const double length = (1 / hz) * sample_rate / adjust_for_sample_rate; //convert frequency to length of one cycle in samples
 
 	smooth_pitch.setTargetValue(length);
 	set_range();

@@ -96,6 +96,7 @@ void NapalmAudioProcessor::changeProgramName (int index, const juce::String& new
 void NapalmAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     napalm_processor.sample_rate = sampleRate;
+    napalm_processor.adjust_for_sample_rate = sampleRate / 44100;
     napalm_processor.smooth_reset(napalm::smooth_target);
 }
 
