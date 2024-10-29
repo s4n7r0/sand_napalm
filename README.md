@@ -1,6 +1,6 @@
 # sand_napalm
 
-**N**ot **A** **P**haser **AL**though **M**aybe  (**NAPALM**)  VST3 Plugin
+**N**ot **A** **P**haser **AL**though **M**aybe  (**NAPALM**) Audio Plugin
 
 ![preview](https://i.imgur.com/KDBIDgO.png)
 
