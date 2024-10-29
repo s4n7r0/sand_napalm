@@ -104,7 +104,7 @@ void napalm::Processor::midi_set_length(double pitch) {
 	set_range();
 }
 
-inline void napalm::Processor::smooth_reset(float target) {
+void napalm::Processor::smooth_reset(float target) {
 	smooth_range.reset(sample_rate, target);
 	smooth_amount.reset(sample_rate, target);
 	smooth_copies.reset(sample_rate, target / 10);

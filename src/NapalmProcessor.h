@@ -25,7 +25,7 @@ namespace napalm {
 			return 440 * std::pow(2, ((midi - 69) / 12));
 		}
 
-		inline void smooth_reset(float);
+		void smooth_reset(float);
 
 		bool midi_input{ false };
 		float midi_note{ 0 };
