@@ -34,30 +34,30 @@ In short: Square4 but as an audio effect
 - JUCE
 - Your system C++ build toolchain (Visual Studio on Windows, XCode on Mac, GCC/Clang on Linux, etc.)
 
-#### Optional
-
-- CMake (**NOTE**: CMake script is only tested on Linux at the moment. Please contribute)
-- Ninja (useful on Linux)
+## Packages for linux
 
 ### Building (the Projucer way)
 
+- ```git clone https://github.com/s4n7r0/sand_napalm.git```
 - Open Projucer
 - Open `Napalm.jucer` in Projucer
-- Add your system build configuration if neccessary (there is only Windows target at the moment), then save the `.jucer` file
+- Select your system build configuration, save the project
 - Build the plugin using the generated project in the `Build` folder. Which means:
-  + Run Visual Studio/Xcode and open the appropriate `.sln`/`xcodeproject`, then compile (Win/Mac)
-  + `cd Builds/LinuxMakefile && make` (Linux)
-
-### Building (the CMake way)
-
-Assuming you are in the root folder, then run these 2 commands in the terminal/command prompt:
-
-```
-cmake -Bbuild
-cmake --build build --config Release
-```
-
-Optionally, on Linux, use Ninja to speed up the build by replacing the first command with `cmake -Bbuild -GNinja`.
+  + Run Visual Studio/Xcode and open the appropriate project, either the generated `.sln`/`xcodeproject` or thru Projucer (Win/Mac)
+  # MAC
+  + If wanna build the plugin in AU format, you need to add AU plugin format in Project Settings's in Projucer
+  + Product > Scheme > Edit Scheme... > Run > Build Configuration > Select "Release"
+  + Build
+  + Copy the compiled sand_napalm.vst3 from "Builds/MaxOSX/build/Release/sand_napalm.vst3" to "~/Library/Audio/Plug-Ins/VST3"
+  # WINDOWS
+  + Select "Release" configuration (Win)
+  + Build
+  + Copy the compiled sand_napalm.vst3 from "Builds\VisualStudio2022\x64\Release\VST3\sand_napalm.vst3\Contents\x86_64-win\" to "C:\Program Files\Common Files\VST3\" (Win)
+  # LINUX
+  + `cd Builds/LinuxMakefile && make CONFIG=Release`
+  + Built VST3 should be copied to "~/.vst3/" but if not
+  + `mkdir ~/.vst3`
+  + `mv "Builds/LinuxMakefile/build/sand_napalm.vst3/Contents/x86_64-linux/sand_napalm.so" "~/.vst3/sand_napalm.vst3"`
 
 # Credits
 [Beats Basteln](https://www.youtube.com/@Beatsbasteln)
