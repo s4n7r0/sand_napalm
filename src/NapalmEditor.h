@@ -124,7 +124,7 @@ namespace napalm {
 	};
 
 	//call set_font after using
-	const juce::Font monospace_font(juce::Font::Font(juce::Font::getDefaultMonospacedFontName(), 0, juce::Font::plain));
+	const juce::Font monospace_font(juce::FontOptions(juce::Font::getDefaultMonospacedFontName(), 0, juce::Font::plain));
 
 	const juce::String invert_text		("invert phase: Inverts every even copy");
 	const juce::String midi_text		("midi:         Uses midi input instead of range");
