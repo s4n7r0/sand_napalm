@@ -48,14 +48,16 @@ In short: Square4 but as an audio effect
   + If wanna build the plugin in AU format, you need to add AU plugin format in Project Settings's in Projucer
   + Product > Scheme > Edit Scheme... > Run > Build Configuration > Select "Release"
   + Build
+  + Built plugin in any format should be copied to "~/Library/Audio/Plug-Ins/" to their respective folders, but if not:
   + Copy the compiled sand_napalm.vst3 from "Builds/MaxOSX/build/Release/sand_napalm.vst3" to "~/Library/Audio/Plug-Ins/VST3"
+  + Copy the compiled sand_napalm.component from "Builds/MaxOSX/build/Release/sand_napalm.component" to "~/Library/Audio/Plug-Ins/Components" ( if building as an AU )
   # WINDOWS
   + Select "Release" configuration (Win)
   + Build
   + Copy the compiled sand_napalm.vst3 from "Builds\VisualStudio2022\x64\Release\VST3\sand_napalm.vst3\Contents\x86_64-win\" to "C:\Program Files\Common Files\VST3\" (Win)
   # LINUX
   + `cd Builds/LinuxMakefile && make CONFIG=Release`
-  + Built VST3 should be copied to "~/.vst3/" but if not
+  + Built VST3 should be copied to "~/.vst3/" but if not:
   + `mkdir ~/.vst3`
   + `mv "Builds/LinuxMakefile/build/sand_napalm.vst3/Contents/x86_64-linux/sand_napalm.so" "~/.vst3/sand_napalm.vst3"`
 
