@@ -34,8 +34,6 @@ In short: Square4 but as an audio effect
 - JUCE
 - Your system C++ build toolchain (Visual Studio on Windows, XCode on Mac, GCC/Clang on Linux, etc.)
 
-## Packages for linux
-
 ### Building (the Projucer way)
 
 - ```git clone https://github.com/s4n7r0/sand_napalm.git```
